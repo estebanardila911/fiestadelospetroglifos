@@ -107,16 +107,21 @@ a{color:inherit}
 @keyframes rebote{50%{transform:translateY(5px)}}
 @media (min-width:700px){.ejes{max-width:none}.lema{max-width:62ch}}
 @media (max-width:560px){.bajar{display:none}.datos{grid-template-columns:1fr 1fr;row-gap:6px}.casa{grid-column:1/-1;grid-row:1;margin:auto}.btn{font-size:16px;padding:1em 1.3em}.datos{font-size:16px}}
-/* Celular: misma composición que la imagen general (fechas | casa | lugar en una fila, sin botones) */
+/* Celular: misma composición que la imagen general (fechas | casa | lugar en una fila) */
 @media (max-width:560px){
-  .hero{min-height:calc(100vw * 1.4);padding-top:calc(170 * var(--u) + 14px);padding-bottom:calc(105 * var(--u) + 14px)}
+  .hero{min-height:0;padding-top:calc(170 * var(--u) + 14px);padding-bottom:calc(105 * var(--u) + 2px)}
   .hero-c{max-width:calc(100vw - 400 * var(--u))}
-  .datos{grid-template-columns:1fr auto 1fr;font-size:12.5px;gap:8px;margin-top:14px;letter-spacing:.03em}
-  .casa{grid-column:auto;grid-row:auto;width:24vw;margin:0}
-  .ejes{font-size:10.5px;letter-spacing:.02em;max-width:none;white-space:nowrap;margin-top:12px}
-  .lema{font-size:12px;line-height:1.35;max-width:none}
-  .hero .acciones{display:none}
-  .hero .rupestre{width:110px;margin-top:14px}
+  .datos{grid-template-columns:1fr auto 1fr;font-size:12.5px;gap:8px;margin-top:10px;letter-spacing:.03em}
+  .casa{grid-column:auto;grid-row:auto;width:21vw;margin:0}
+  .ejes{width:max-content;margin-left:50%;translate:-50% 0;font-size:12px;letter-spacing:.02em;max-width:none;white-space:nowrap;margin-top:9px}
+  .lema{width:min(92vw,360px);margin-left:50%;translate:-50% 0;font-size:11px;line-height:1.35;max-width:none}
+  .hero .acciones{width:min(92vw,360px);margin-left:50%;translate:-50% 0;flex-wrap:nowrap;gap:8px;margin-top:12px}.hero .btn{font-size:12px;padding:0 1.1em;min-height:40px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box}
+  .hero .rupestre{width:94px;margin-top:10px}
+  /* Cada espiral tiene su escala en celular (--km) para que no se crucen ni toquen el título */
+  .capa{width:calc(var(--w) * var(--u) * var(--km,1))}
+  /* La espiral superior sube para no tocar el personaje; la inferior central queda centrada */
+  .capa.c.t{top:calc(-60 * var(--u))}
+  .capa.c.b{left:50%;translate:calc(-50% - 10 * var(--u)) 0}
 }
 
 /* ---------- Revelado al hacer scroll ---------- */
@@ -152,6 +157,7 @@ section{position:relative;scroll-margin-top:52px}
 .prog .col{left:0;width:var(--strip)}
 .prog .h-sec{color:var(--crema)}
 .prog .kicker{color:var(--naranja)}
+@media (max-width:560px){.prog .wrap{padding-top:30px}.prog .cab{margin-bottom:10px}.prog .tabs{padding:6px 0}}
 /* Los días quedan fijos bajo la barra de navegación mientras se recorre la agenda */
 .tabs{position:sticky;top:var(--navh,52px);z-index:5;display:flex;justify-content:center;gap:clamp(6px,2vw,18px);flex-wrap:nowrap;margin:0 0 clamp(14px,2.5vw,26px);padding:10px 0;background:var(--negro);box-shadow:0 12px 14px -10px rgba(0,0,0,.6)}
 .siguiente{margin-top:clamp(18px,3vw,28px);display:inline-flex;align-items:center;gap:.6em;background:none;border:2px dashed var(--naranja);border-radius:999px;color:var(--naranja);font:700 16px/1 "Typewriter",monospace;letter-spacing:.08em;text-transform:uppercase;padding:.85em 1.4em;cursor:pointer;transition:background .25s,color .25s,transform .3s var(--ease)}
@@ -166,7 +172,7 @@ section{position:relative;scroll-margin-top:52px}
 .panel[hidden]{display:none}
 .panel.entra .act{animation:actIn .6s var(--ease) backwards;animation-delay:calc(var(--i) * 70ms)}
 @keyframes actIn{from{opacity:0;transform:translateX(24px)}}
-.panel h3{font:600 1.05em/1.2 "Typewriter",monospace;text-decoration:underline;text-underline-offset:5px;margin:0 0 18px}
+.panel h3{font:600 1.05em/1.2 "Typewriter",monospace;text-decoration:underline;text-underline-offset:5px;margin:clamp(22px,3vw,32px) 0 18px}
 .act{display:grid;grid-template-columns:minmax(118px,10.5em) 1fr;gap:4px 24px;padding:16px 0;max-width:900px}
 .act + .act::before{content:"--------------------------------------------------------------------------------------------------------------------------------";grid-column:1/-1;display:block;overflow:hidden;white-space:nowrap;margin:-16px 0 12px;color:var(--crema);opacity:.45;letter-spacing:.05em}
 .act .hora{font-weight:700;font-size:1.05em;color:var(--naranja)}
@@ -197,6 +203,15 @@ section{position:relative;scroll-margin-top:52px}
 .tar .foto-rec figcaption{position:absolute;right:6px;bottom:5px;font-size:11px;line-height:1.2;letter-spacing:.03em;color:var(--crema);background:rgba(35,31,32,.6);padding:2px 6px}
 .tar .foto{width:100%;aspect-ratio:3/2;object-fit:cover;display:block;transition:transform .6s var(--ease)}
 .tar:hover .foto{transform:scale(1.03)}
+/* Toda la tarjeta abre el formulario: el enlace se extiende sobre ella */
+.tar .inscribe::after{content:"";position:absolute;inset:0;z-index:1}
+/* Sin transform en el enlace: si se mueve, la zona clicable se reduce a él solo (pasaba en el celular) */
+.tar .inscribe,.tar .inscribe:hover,.tar .inscribe:focus-visible{transform:none}
+.tar:hover .inscribe{text-decoration-thickness:2px}
+.tar:not(.tar--lleno){cursor:pointer}
+.tar--lleno:hover,.tar--lleno:focus-within{transform:none;box-shadow:6px 6px 0 var(--c)}
+.tar--lleno:hover .foto{transform:none}
+.lleno{font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--rojo)}
 .tar{overflow:hidden}
 .tar .cuerpo{padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;flex:1}
 .tar h3{font:700 1.15em/1.2 "Typewriter",monospace;margin:0}
@@ -307,9 +322,14 @@ section{position:relative;scroll-margin-top:52px}
 .flota svg{width:26px;height:26px;flex:none}
 .flota--pdf{background:var(--rojo)}
 .flota--pdf svg{width:22px;height:22px}
+.flota em{font-style:normal}
 .wa-flota:hover,.wa-flota:focus-visible{transform:translateY(-3px) scale(1.04);background:#00703c}
 .flota--pdf:hover,.flota--pdf:focus-visible{transform:translateY(-3px) scale(1.04);background:#d9432b}
-@media (max-width:560px){.flotantes{flex-direction:column;align-items:flex-end}.flota{padding:14px}.flota span{display:none}}
+@media (max-width:560px){.flotantes{flex-direction:column;align-items:flex-end}.flota{position:relative;padding:14px}
+  /* En móvil el texto aparece como etiqueta al pasar el cursor o tocar */
+  .flota span{position:absolute;right:calc(100% + 10px);top:50%;padding:8px 12px;border-radius:999px;background:var(--negro);color:var(--crema);border:1.5px solid var(--crema);font-size:12px;white-space:nowrap;box-shadow:0 6px 16px rgba(0,0,0,.25);opacity:0;pointer-events:none;transform:translate(8px,-50%);transition:opacity .3s var(--ease),transform .3s var(--ease)}
+  .flota:hover span,.flota:focus-visible span,.flota.tip span{opacity:1;transform:translate(0,-50%)}
+  .flota .solo-web{display:none}}
 
 /* ---------- Reducir movimiento ---------- */
 @media (prefers-reduced-motion:reduce){
@@ -335,7 +355,7 @@ section{position:relative;scroll-margin-top:52px}
 </nav>
 
 <div class="flotantes">
-  <a class="flota flota--pdf lnk-pdf" href="#" target="_blank" rel="noopener" aria-label="Descarga la programación en PDF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16"/></svg><span>Descarga programación</span></a>
+  <a class="flota flota--pdf lnk-pdf" href="#" target="_blank" rel="noopener" aria-label="Descarga la programación en PDF"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16"/></svg><span><em class="solo-web">Descarga </em>programación</span></a>
   <a class="flota wa-flota lnk-wa" href="#" target="_blank" rel="noopener" aria-label="Escríbenos a WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 3a13 13 0 0 0-11.3 19.4L3 29l6.8-1.8A13 13 0 1 0 16 3Zm0 23.6c-2 0-4-.6-5.7-1.6l-.4-.2-4 1 1.1-3.9-.3-.4A10.6 10.6 0 1 1 16 26.6Zm5.8-7.9c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0a8.7 8.7 0 0 1-4.3-3.8c-.3-.6.3-.5.9-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7 6.3 6.3 0 0 0 1.3 3.3 14.4 14.4 0 0 0 5.5 4.9c2 .9 2.8 1 3.9.8a3.3 3.3 0 0 0 2.1-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.2-.3-.3-.6-.5Z"/></svg><span>Escríbenos</span></a>
 </div>
 
@@ -506,7 +526,7 @@ section{position:relative;scroll-margin-top:52px}
    DATOS EDITABLES — cambia aquí enlaces, programación, recorridos e invitados
    ===================================================================== */
 const ENLACES = {
-  pdfProgramacion: "https://drive.google.com/file/d/1lKySovh7at3geSCUSb00IeF-OIk8TGu7/view?usp=sharing", // ← PDF de la programación en Google Drive
+  pdfProgramacion: "https://drive.google.com/file/d/1PmwmaF65Ux1TVf4elS2JYpG_10Xsmfv7/view?usp=sharing", // ← PDF de la programación en Google Drive
   formularioRecorridos: "https://forms.gle/qfn4eop3MtuDpoJ69",
   formularioActividades: "https://docs.google.com/forms/d/e/1FAIpQLScDxTz3Mlb90u6h62VItFv7YgjJ58vCfSZBNsPpQyJ0bim7Lg/viewform?usp=dialog", // ← inscripción a talleres y charlas (actividades con inscripcion: true)    // ← formulario de inscripción a los recorridos
   instagram: "petroglifosviajeros",
@@ -522,7 +542,7 @@ const PROGRAMACION = [
       lugar: "I.E. San Antonio de Padua – 120 años", convoca: "Ministerio de Cultura y Rupestre" },
     { hora: "4:00 p. m.", tipo: "taller", inscripcion: true, titulo: "Taller de portavasos con arte rupestre",
       descripcion: "", lugar: "Punto de Lectura Comfama – Parque Educativo Cartama", convoca: "Comfama y Rupestre" },
-    { hora: "5:00 p. m.", tipo: "recorrido", titulo: "El origen del todo",
+    { hora: "5:00 p. m.", tipo: "recorrido", lleno: true, titulo: "El origen del todo",
       descripcion: "Recorrido a los petroglifos del Agroparque Biosuroeste. Sin costo – inscripción previa.",
       lugar: "Agroparque Biosuroeste", convoca: "Comfama y Rupestre" }
   ]},
@@ -538,9 +558,7 @@ const PROGRAMACION = [
       lugar: "Casa Nido (Cl. 11 #11-16)", convoca: "ICANH y Rupestre" },
     { hora: "5:00 p. m.", tipo: "recorrido", titulo: "Viaje a la Piedra del Pirú: el símbolo rupestre",
       descripcion: "Actividad con costo: $100.000 – inscripción previa. Incluye transporte y refrigerio.",
-      convoca: "Montaña Travel" },
-    { hora: "8:30 p. m.", tipo: "arte", titulo: "Melisma",
-      descripcion: "Presentación artística.", lugar: "Casa Nido (Cl. 11 #11-16)" }
+      convoca: "Montaña Travel" }
   ]},
   { id: "domingo", dia: "Domingo", fecha: "15", titulo: "Domingo, 15 de noviembre", iso: "2026-11-15", actividades: [
     { hora: "3:40 a. m.", tipo: "recorrido", titulo: "Amanecer sobre las nubes del Cartama",
@@ -565,7 +583,7 @@ const PROGRAMACION = [
 
 // color: verde | azul | rojo | naranja
 const RECORRIDOS = [
-  { nombre: "El origen del todo: petroglifos del Agroparque Biosuroeste", fecha: "Viernes 13", hora: "5:00 p. m.", cupos: "Cupo limitado",
+  { nombre: "El origen del todo: petroglifos del Agroparque Biosuroeste", fecha: "Viernes 13", hora: "5:00 p. m.", cupos: "Cupos llenos", lleno: true,
     costo: "Sin costo", convoca: "Comfama y Rupestre", foto: "assets/img/recorrido-origen.webp", alt: "Globo aerostático sobre las montañas verdes del Agroparque Biosuroeste", color: "verde" },
   { nombre: "Piedra del Pirú: el símbolo rupestre", fecha: "Sábado 14", hora: "5:00 p. m.", cupos: "Cupo limitado",
     costo: "$100.000 · incluye transporte y refrigerio", convoca: "Montaña Travel", foto: "assets/img/recorrido-piru.webp", alt: "Silueta de una persona con sombrero frente a los petroglifos iluminados de la Piedra del Pirú", credito: "Foto: Camila Henao y Montaña Travel", color: "azul" },
@@ -620,6 +638,7 @@ const ALIADOS = [
     { img: "yamay", nombre: "Yamay Experiences", h: 84 },
     { img: "bendiciones", nombre: "Tentaciones de mi pueblo", h: 90 },
     { img: "escudo-tamesis", nombre: "Municipio de Támesis", h: 76 },
+    { img: "periplo", nombre: "Periplo de Abejas", h: 84 },
     { img: "vision-suroeste", nombre: "Visión Suroeste", h: 92 }
   ]},
   { nivel: "Sede", logos: [ { img: "casa-nido", nombre: "Casa Cultural El Nido, Támesis", h: 96 } ] }
@@ -640,26 +659,33 @@ document.querySelectorAll(".lnk-pdf").forEach(a => a.href = ENLACES.pdfProgramac
 $("#btn-form").href = ENLACES.formularioRecorridos;
 const ig = $("#lnk-ig"); ig.href = "https://instagram.com/" + ENLACES.instagram; ig.textContent = "@" + ENLACES.instagram;
 document.querySelectorAll(".lnk-wa").forEach(a => a.href = "https://wa.me/" + ENLACES.whatsapp);
+// Etiquetas de los botones flotantes: se muestran un momento al tocar y una vez al cargar
+document.querySelectorAll(".flota").forEach(b => {
+  let t;
+  const muestra = ms => { b.classList.add("tip"); clearTimeout(t); t = setTimeout(() => b.classList.remove("tip"), ms); };
+  b.addEventListener("touchstart", () => muestra(1800), { passive: true });
+  setTimeout(() => muestra(2600), 4200);
+});
 const ml = $("#lnk-mail"); ml.href = "mailto:" + ENLACES.correo; ml.textContent = ENLACES.correo;
 
 /* Portada: espirales del key visual, recortadas en el borde del afiche (coordenadas 1080×1350) */
 const CAPAS = [
-  // [imagen, lado l|r|c, vertical t|b|y, x (solo centro), ancho, profundidad parallax, retraso]
+  // [imagen, lado l|r|c, vertical t|b|y, x (solo centro), ancho, profundidad parallax, retraso, escala en celular]
   ["esp-6",  "c", "t",  307, 451, 0,   .00],
-  ["esp-4",  "l", "t",    0, 351, 0,   .08],
-  ["esp-5",  "r", "t",    0, 376, 0,   .14],
-  ["esp-11", "l", 206,    0, 192, .16, .22],
-  ["esp-9",  "r", 226,    0, 221, .20, .28],
+  ["esp-4",  "l", "t",    0, 351, 0,   .08, 0.84],
+  ["esp-5",  "r", "t",    0, 376, 0,   .14, 0.92],
+  ["esp-11", "l", 206,    0, 192, .16, .22, 0.75],
+  ["esp-9",  "r", 226,    0, 221, .20, .28, 0.72],
   ["esp-10", "l", 641,    0, 165, .12, .34],
   ["esp-8",  "r", 677,    0, 186, .14, .40],
-  ["esp-3",  "l", "b",    0, 287, 0,   .46],
-  ["esp-2",  "r", "b",    0, 316, 0,   .52],
-  ["esp-7",  "c", "b",  299, 461, 0,   .58]
+  ["esp-3",  "l", "b",    0, 287, 0,   .46, 1.03],
+  ["esp-2",  "r", "b",    0, 316, 0,   .52, 1.02],
+  ["esp-7",  "c", "b",  299, 461, 0,   .58, 0.9]
 ];
 const ORIGEN = { "lt": "0 0", "rt": "100% 0", "ct": "50% 0", "lb": "0 100%", "rb": "100% 100%", "cb": "50% 100%", "l": "0 50%", "r": "100% 50%" };
-$(".capas").innerHTML = CAPAS.map(([img, lado, v, x, w, p, d]) => {
+$(".capas").innerHTML = CAPAS.map(([img, lado, v, x, w, p, d, km = 1]) => {
   const vert = typeof v === "number" ? "" : v;
-  return `<div class="capa ${lado} ${vert}" ${p ? `data-depth="${p}"` : ""} style="--x:${x - 540};--y:${typeof v === "number" ? v : 0};--w:${w};--d:${d}s;--o:${ORIGEN[lado + vert]}"><img src="assets/img/${img}.webp" alt="" decoding="async"></div>`;
+  return `<div class="capa ${lado} ${vert}" ${p ? `data-depth="${p}"` : ""} style="--x:${x - 540};--y:${typeof v === "number" ? v : 0};--w:${w};--km:${km};--d:${d}s;--o:${ORIGEN[lado + vert]}"><img src="assets/img/${img}.webp" alt="" decoding="async"></div>`;
 }).join("");
 
 /* Programación por días */
@@ -680,7 +706,7 @@ paneles.innerHTML = PROGRAMACION.map((d, di) => `
           ${a.descripcion ? `<p>${esc(a.descripcion)}</p>` : ""}
           ${meta ? `<p class="meta">${meta}</p>` : ""}
           ${a.enlace ? `<p><a class="ir" href="${a.enlace}">Ver evento central →</a></p>` : ""}
-          ${a.tipo === "recorrido" || a.inscripcion ? `<p><a class="inscribe" href="${esc(a.tipo === "recorrido" ? ENLACES.formularioRecorridos : ENLACES.formularioActividades)}" target="_blank" rel="noopener">Inscríbete aquí →</a></p>` : ""}
+          ${a.lleno ? `<p class="lleno">Cupos llenos</p>` : a.tipo === "recorrido" || a.inscripcion ? `<p><a class="inscribe" href="${esc(a.tipo === "recorrido" ? ENLACES.formularioRecorridos : ENLACES.formularioActividades)}" target="_blank" rel="noopener">Inscríbete aquí →</a></p>` : ""}
         </div>
       </article>`;
     }).join("")}
@@ -719,7 +745,7 @@ abrirDia(Math.max(0, PROGRAMACION.findIndex(d => d.iso === hoy)));
 
 /* Recorridos */
 $(".tarjetas").innerHTML = RECORRIDOS.map((r, i) => `
-  <article class="tar rv" style="--c:${COLORES[r.color]};--ct:${r.color === "naranja" ? "var(--negro)" : "var(--crema)"};--rd:${i * .08}s">
+  <article class="tar rv${r.lleno ? " tar--lleno" : ""}" style="--c:${COLORES[r.color]};--ct:${r.color === "naranja" ? "var(--negro)" : "var(--crema)"};--rd:${i * .08}s">
     <div class="top">
       <div class="fecha">${esc(r.fecha)}</div>
       <div class="mes">Noviembre</div>
@@ -729,11 +755,11 @@ $(".tarjetas").innerHTML = RECORRIDOS.map((r, i) => `
     <div class="cuerpo">
       <h3>${esc(r.nombre)}</h3>
       <dl>
-        <dt>Cupos:</dt><dd>${esc(r.cupos)}</dd>
+        <dt>Cupos:</dt><dd${r.lleno ? ' class="lleno"' : ""}>${esc(r.cupos)}</dd>
         <dt>Convoca:</dt><dd>${esc(r.convoca)}</dd>
       </dl>
       <p class="costo">${esc(r.costo)}</p>
-      <p><a class="inscribe" href="${esc(ENLACES.formularioRecorridos)}" target="_blank" rel="noopener">Inscríbete aquí →</a></p>
+      ${r.lleno ? "" : `<p><a class="inscribe" href="${esc(ENLACES.formularioRecorridos)}" target="_blank" rel="noopener">Inscríbete aquí →</a></p>`}
     </div>
   </article>`).join("");
 
